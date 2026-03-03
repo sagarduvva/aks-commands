@@ -503,10 +503,14 @@ http://<External-IP-from-get-service-output>
 
 #### Step-01: Updating Application version V1 to V2 using "Set Image" Option
 
+##### Update Deployment
+
+
+##### Verify Rollout Status (Deployment Status)
 
 
 
-#### Step-01: Updating Application version V1 to V2 using "Set Image" Option
+#### Step-02: Update the Application from V2 to V3 using "Edit Deployment" Option
 
 
 
