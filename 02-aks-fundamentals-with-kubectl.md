@@ -31,12 +31,15 @@ kubectl get pods,svc        # List all pods and Services
 kubectl get rc,services     # List all replication controllers and services
 
 
+
 # List from all namespaces
 kubectl get pods --all-namespaces     # List all pods existing in all namespaces
 
 
+
 # List a pod identified by type and name specified in "pod.yaml"
 kubectl get -f pod.yaml
+
 
 
 # Get all Objects in default namespace
@@ -44,26 +47,30 @@ kubectl get all
 
 
 
-
 # Clean-Up [Delete]
+## Delete Pod
 kubectl delete pod <Pod-Name>               # Delete Pod
 kubectl delete pod my-first-pod     
 [or]
 kubectl delete pod/my-first-pod
 
+## Delete Service
 kubectl delete svc <Service-Name>           # Delete Service
 kubectl delete svc my-first-service
 [or]
 kubectl delete svc/my-first-service
 
+## Delete ReplicaSet
 kubectl delete rc <ReplicaSet-Name>         # Delete ReplicaSet
 kubectl delete rs my-helloworld-rs
 [or]
 kubectl delete rs/my-helloworld-rs
+
 ```
 
 ---
 ---
+
 
 ## Inspect AKS with Kubectl Commands
 
@@ -73,38 +80,33 @@ kubectl delete rs/my-helloworld-rs
 ## PODs
 kubectl describe pod <Pod-Name>     # Describe the Pod
 kubectl describe pod my-first-pod
-
+[or]
 kubectl describe pod/<Pod-Name>     # Describe the Pod
 kubectl describe pod/my-first-pod
 
 ## Service
 kubectl describe service <Service-Name>         # Describe Service
 kubectl describe service my-first-service
-
+[or]
 kubectl describe service/<Service-Name>         # Describe Service
 kubectl describe service/my-first-service
 
 ## ReplicaSets
 kubectl describe rs <replicaset-name>           # Describe ReplicaSets
 kubectl describe rs my-helloworld-rs
-
+[or]
 kubectl describe rs/<replicaset-name>           # Describe ReplicaSets
 kubectl describe rs/my-helloworld-rs
-
-
-
-
 
 
 
 # Verify Logs
 
 ## PODs
-kubectl logs <pod-name>
+kubectl logs <pod-name>             # POD Logs
 kubectl logs my-first-pod
-
-# Stream pod logs with -f option and access application to see logs
-kubectl logs <pod-name>
+[or]
+kubectl logs <pod-name>             # Stream POD logs with -f option
 kubectl logs -f my-first-pod
 
 
@@ -293,28 +295,26 @@ spec:
 ### List ReplicaSets
 - Get list of ReplicaSets
 ```
-kubectl get replicaset    # Get list of ReplicaSets
+kubectl get replicaset            # Get list of ReplicaSets
 kubectl get rs            
 ```
 
 ### Describe ReplicaSet
 - Describe the newly created ReplicaSet
 ```
-kubectl describe rs/<replicaset-name>
+kubectl describe rs/<replicaset-name>       # Describe ReplicaSets
 kubectl describe rs/my-helloworld-rs
 [or]
-kubectl describe rs <replicaset-name>
+kubectl describe rs <replicaset-name>       # Describe ReplicaSets
 kubectl describe rs my-helloworld-rs
 ```
 
 ### List of Pods
 ```
 # Get list of Pods
-kubectl get pods
-kubectl describe pod <pod-name>
-
-# Get list of Pods with Pod IP and Node in which it is running
-kubectl get pods -o wide
+kubectl get pods                            # Get Pods list with status
+kubectl get pods -o wide                    # Get Pods list with wide options
+kubectl describe pod <pod-name>             # Describe the Pod
 ```
 
 ### Verify the Owner of the Pod
@@ -325,22 +325,25 @@ kubectl get pods <pod-name> -o yaml
 kubectl get pods my-helloworld-rs-c8rrj -o yaml 
 ```
 
+
 ## Step-03: Expose ReplicaSet as a Service
 - Expose ReplicaSet with a service (Load Balancer Service) to access the application externally (from internet)
 ```
 # Expose ReplicaSet as a Service
 kubectl expose rs <ReplicaSet-Name>  --type=LoadBalancer --port=80 --target-port=8080 --name=<Service-Name-To-Be-Created>
-kubectl expose rs my-helloworld-rs  --type=LoadBalancer --port=80 --target-port=8080 --name=my-helloworld-rs-service
+
+kubectl expose rs my-helloworld-rs  --type=LoadBalancer --port=80 --target-port=8080 --name=my-helloworld-rs-service 
 
 # Get Service Info
-kubectl get service
-kubectl get svc
+kubectl get service               # Get Service Info
+kubectl get svc                   
 
 ```
 - **Access the Application using External or Public IP**
 ```
 http://<External-IP-from-get-service-output>/hello
 ```
+
 
 ## Step-04: Test Replicaset Reliability or High Availability 
 - Test how the high availability or reliability concept is achieved automatically in Kubernetes
@@ -356,6 +359,7 @@ kubectl delete pod <Pod-Name>
 kubectl get pods   (Verify Age and name of new pod)
 ``` 
 
+
 ## Step-05: Test ReplicaSet Scalability feature 
 - Test how scalability is going to seamless & quick
 - Update the **replicas** field in **replicaset-demo.yml** from 3 to 6.
@@ -368,7 +372,8 @@ spec:
 spec:
   replicas: 6
 ```
-- Update the ReplicaSet
+
+### Update the ReplicaSet
 ```
 # Apply latest changes to ReplicaSet
 kubectl replace -f replicaset-demo.yml
@@ -377,16 +382,15 @@ kubectl replace -f replicaset-demo.yml
 kubectl get pods -o wide
 ```
 
+
 ## Step-06: Delete ReplicaSet & Service
 ### Delete ReplicaSet
 ```
 # Delete ReplicaSet
-kubectl delete rs <ReplicaSet-Name>
-
-# Sample Commands
-kubectl delete rs/my-helloworld-rs
-[or]
+kubectl delete rc <ReplicaSet-Name>         # Delete ReplicaSet
 kubectl delete rs my-helloworld-rs
+[or]
+kubectl delete rs/my-helloworld-rs
 
 # Verify if ReplicaSet got deleted
 kubectl get rs
@@ -395,13 +399,12 @@ kubectl get rs
 ### Delete Service created for ReplicaSet
 ```
 # Delete Service
-kubectl delete svc <service-name>
-
-# Sample Commands
-kubectl delete svc my-helloworld-rs-service
+kubectl delete svc <Service-Name>           # Delete Service
+kubectl delete svc my-first-service
 [or]
-kubectl delete svc/my-helloworld-rs-service
+kubectl delete svc/my-first-service
 
 # Verify if Service got deleted
 kubectl get svc
 ```
+
