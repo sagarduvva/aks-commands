@@ -752,7 +752,7 @@ kubectl get all
 - LoadBalancer Type is primarily for cloud providers and it will differ cloud to cloud, so we will do it accordingly (per cloud basis)
 - ExternalName doesn't have Imperative commands and we need to write YAML definition for the same, so we will look in to it as and when it is required in our course. 
 
-### Step-04: Clean-Up
+### Step-02: ClusterIP Service - Backend Application Setup
 - Create a deployment for Backend Application (Spring Boot REST Application)
 - Create a ClusterIP service for load balancing backend application. 
 ```
@@ -775,12 +775,13 @@ kubectl get service
 >> **Backend HelloWorld Application Source** [kube-helloworld](https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/00-Docker-Images/02-kube-backend-helloworld-springboot/kube-helloworld)
 
 
-### Step-04: Clean-Up
+### Step-03: LoadBalancer Service - Frontend Application Setup
 - We have implemented **LoadBalancer Service** multiple times so far (in pods, replicasets and deployments), even then we are going to implement one more time to get a full architectural view in relation with ClusterIp service. 
 - Create a deployment for Frontend Application (Nginx acting as Reverse Proxy)
 - Create a LoadBalancer service for load balancing frontend application. 
 - **Important Note:** In Nginx reverse proxy, ensure backend service name `my-backend-service` is updated when you are building the frontend container. We already built it and put ready for this demo (stacksimplify/kube-frontend-nginx:1.0.0)
-- **Nginx Conf File**
+
+**Nginx Conf File**
 ```conf
 server {
     listen       80;
@@ -796,16 +797,18 @@ server {
     }
 }
 ```
-- **Docker Image Location:** https://hub.docker.com/repository/docker/stacksimplify/kube-frontend-nginx
-- **Frontend Nginx Reverse Proxy Application Source** [kube-frontend-nginx](https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/00-Docker-Images/03-kube-frontend-nginx)
+> **Docker Image Location:** https://hub.docker.com/repository/docker/stacksimplify/kube-frontend-nginx
+>> **Frontend Nginx Reverse Proxy Application Source** [kube-frontend-nginx](https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/00-Docker-Images/03-kube-frontend-nginx)
+
 ```
 # Create Deployment for Frontend Nginx Proxy
 kubectl create deployment my-frontend-nginx-app --image=stacksimplify/kube-frontend-nginx:1.0.0 
-kubectl get deploy
+
+# Get Deployments
+kubectl get deployment
 
 # Create LoadBalancer Service for Frontend Nginx Proxy
 kubectl expose deployment my-frontend-nginx-app  --type=LoadBalancer --port=80 --target-port=80 --name=my-frontend-service
-kubectl get svc
 
 # Get Load Balancer IP
 kubectl get svc
@@ -818,5 +821,4 @@ kubectl scale --replicas=10 deployment/my-backend-rest-app
 http://<External-IP-from-get-service-output>/hello
 ```
 
-
-
+---
