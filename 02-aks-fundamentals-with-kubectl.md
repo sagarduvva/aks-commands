@@ -1,6 +1,6 @@
 # AKS Fundamentals with Kubectl commands (Imperative)
 
-## 0. Basic AKS Kubectl Commands
+## Basic AKS Kubectl Commands
 
 ```
 # Configure Cluster Creds (kube config) for Azure AKS Clusters
@@ -46,18 +46,25 @@ kubectl get all
 
 
 # Clean-Up [Delete]
-kubectl delete pod <Pod-Name>         # Delete Pod
+kubectl delete pod <Pod-Name>               # Delete Pod
 kubectl delete pod my-first-pod     
+[or]
+kubectl delete pod/my-first-pod
 
-kubectl delete svc <Service-Name>     # Delete Service
+kubectl delete svc <Service-Name>           # Delete Service
 kubectl delete svc my-first-service
+[or]
+kubectl delete svc/my-first-service
 
-kubectl delete rc <>
+kubectl delete rc <ReplicaSet-Name>         # Delete ReplicaSet
+kubectl delete rs my-helloworld-rs
+[or]
+kubectl delete rs/my-helloworld-rs
 ```
 
 
 
-## 0. Inspect AKS with Kubectl Commands
+## Inspect AKS with Kubectl Commands
 
 ```
 
