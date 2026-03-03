@@ -771,7 +771,6 @@ kubectl expose deployment my-backend-rest-app --port=8080 --target-port=8080 --n
 kubectl get service
 ```
 > **Important Note:** If backend application port (Container Port: 8080) and Service Port (8080) are same we don't need to use **--target-port=8080** but for avoiding the confusion i have added it. Same case applies to frontend application and service. 
-
 >> **Backend HelloWorld Application Source** [kube-helloworld](https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/00-Docker-Images/02-kube-backend-helloworld-springboot/kube-helloworld)
 
 
