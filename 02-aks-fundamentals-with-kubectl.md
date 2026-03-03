@@ -26,6 +26,10 @@ kubectl get svc             # Alias name for Service is svc
 kubectl get replicaset      # Get ReplicaSets Info
 kubectl get rs              # Alias name for ReplicaSets is rs
 
+## ReplicaSets
+kubectl get deployments     # Get Deployments Info
+kubectl get deploy          # Alias name for Deployments is deploy
+
 ## Multi Services
 kubectl get pods,svc        # List all pods and Services
 kubectl get rc,services     # List all replication controllers and services
@@ -49,23 +53,28 @@ kubectl get all
 
 # Clean-Up [Delete]
 ## Delete Pod
-kubectl delete pod <Pod-Name>               # Delete Pod
+kubectl delete pod <Pod-Name>                   # Delete Pod
 kubectl delete pod my-first-pod     
 [or]
 kubectl delete pod/my-first-pod
 
 ## Delete Service
-kubectl delete svc <Service-Name>           # Delete Service
+kubectl delete svc <Service-Name>               # Delete Service
 kubectl delete svc my-first-service
 [or]
 kubectl delete svc/my-first-service
 
 ## Delete ReplicaSet
-kubectl delete rc <ReplicaSet-Name>         # Delete ReplicaSet
+kubectl delete rc <ReplicaSet-Name>             # Delete ReplicaSet
 kubectl delete rs my-helloworld-rs
 [or]
 kubectl delete rs/my-helloworld-rs
 
+## Delete ReplicaSet
+kubectl delete deploy <ReplicaSet-Name>         # Delete Deployment
+kubectl delete deploy my-first-deployment
+[or]
+kubectl delete deploy/my-first-deployment
 ```
 
 ---
@@ -98,6 +107,12 @@ kubectl describe rs my-helloworld-rs
 kubectl describe rs/<replicaset-name>           # Describe ReplicaSets
 kubectl describe rs/my-helloworld-rs
 
+## Deployment
+kubectl describe deployment  <deployment-name>           # Describe Deployment 
+kubectl describe deployment  my-helloworld-rs
+[or]
+kubectl describe deployment/<deployment-name>           # Describe Deployment
+kubectl describe deployment/my-first-deployment
 
 
 # Verify Logs
@@ -420,22 +435,78 @@ kubectl get svc
 
 ### 4. 1. Create Deployment
 
+- Create Deployment to rollout a ReplicaSet
+- Verify Deployment, ReplicaSet & Pods
 
+```
+# Create Deployment
+kubectl create deployment <Deplyment-Name> --image=<Container-Image>
+kubectl create deployment my-first-deployment --image=ghcr.io/stacksimplify/kubenginx:1.0.0 
 
+# Verify Deployment
+kubectl get deployments
+kubectl get deploy 
+
+# Describe Deployment
+kubectl describe deployment <deployment-name>
+kubectl describe deployment my-first-deployment
+
+# Verify ReplicaSet
+kubectl get rs
+
+# Verify Pod
+kubectl get po
+```
 
 ### 4. 2. Scaling the Deployment
 
+- Scale the deployment to increase the number of replicas (pods)
 
+```
+# Scale Up the Deployment
+kubectl scale --replicas=10 deployment/<Deployment-Name>
+kubectl scale --replicas=10 deployment/my-first-deployment 
 
+# Verify Deployment
+kubectl get deploy
+
+# Verify ReplicaSet
+kubectl get rs
+
+# Verify Pods
+kubectl get po
+
+# Scale Down the Deployment
+kubectl scale --replicas=2 deployment/my-first-deployment 
+kubectl get deploy
+```
 
 ### 4. 3. Expose Deployment as a Service
 
+```
+# Expose Deployment as a Service
+kubectl expose deployment <Deployment-Name>  --type=LoadBalancer --port=80 --target-port=80 --name=<Service-Name-To-Be-Created>
+kubectl expose deployment my-first-deployment --type=LoadBalancer --port=80 --target-port=80 --name=my-first-deployment-service
 
+# Get Service Info
+kubectl get svc
 
-
+# Access the Application using Public IP
+http://<External-IP-from-get-service-output>
+```
 
 ### 4. 4. Update Deployment
 
+- We can update deployments using two options
+  1. Set Image
+  2. Edit Deployment
+
+#### Step-01: Updating Application version V1 to V2 using "Set Image" Option
+
+
+
+
+#### Step-01: Updating Application version V1 to V2 using "Set Image" Option
 
 
 
