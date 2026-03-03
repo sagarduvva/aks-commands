@@ -570,6 +570,57 @@ http://<External-IP-from-get-service-output>
 #### Step-02: Update the Application from V2 to V3 using "Edit Deployment" Option
 
 ```
+# Edit Deployment
+kubectl edit deployment/<Deployment-Name> --record=true
+kubectl edit deployment/my-first-deployment --record=true
+
+
+
+# Change From 2.0.0
+    spec:
+      containers:
+      - image: stacksimplify/kubenginx:2.0.0
+
+# Change To 3.0.0
+    spec:
+      containers:
+      - image: stacksimplify/kubenginx:3.0.0
+
+
+
+# Verify Rollout Status
+  - Observation: Rollout happens in a rolling update model, so no downtime.
+
+# Verify Rollout Status 
+kubectl rollout status deployment/my-first-deployment
+
+
+
+# Verify Replicasets
+  - Observation: We should see 3 ReplicaSets now, as we have updated our application to 3rd version 3.0.0
+
+# Verify ReplicaSet and Pods
+kubectl get rs
+kubectl get po
+
+
+
+# Verify Rollout History
+
+# Check the Rollout History of a Deployment
+kubectl rollout history deployment/<Deployment-Name>
+kubectl rollout history deployment/my-first-deployment   
+
+
+
+# Access the Application using Public IP
+  - We should see Application Version:V3 whenever we access the application in browser
+
+# Get Load Balancer IP
+kubectl get svc
+
+# Application URL
+http://<External-IP-from-get-service-output>
 
 
 
