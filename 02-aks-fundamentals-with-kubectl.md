@@ -1,13 +1,10 @@
 # AKS Fundamentals with Kubectl commands (Imperative)
 
-## Basic AKS Kubectl Commands
+# Basic AKS Kubectl Commands
 
+
+## Kubectl Get Commands
 ```
-# Configure Cluster Creds (kube config) for Azure AKS Clusters
-az aks get-credentials --resource-group aks-rg1 --name aksdemo1
-
-
-# Kubectl Get Commands
 ## Nodes
 kubectl get nodes           # Get Worker Node Status
 kubectl get nodes -o wide   # Get Worker Node Status with wide options
@@ -26,7 +23,7 @@ kubectl get svc             # Alias name for Service is svc
 kubectl get replicaset      # Get ReplicaSets Info
 kubectl get rs              # Alias name for ReplicaSets is rs
 
-## ReplicaSets
+## Deployment
 kubectl get deployments     # Get Deployments Info
 kubectl get deploy          # Alias name for Deployments is deploy
 
@@ -34,24 +31,23 @@ kubectl get deploy          # Alias name for Deployments is deploy
 kubectl get pods,svc        # List all pods and Services
 kubectl get rc,services     # List all replication controllers and services
 
-
-
 # List from all namespaces
 kubectl get pods --all-namespaces     # List all pods existing in all namespaces
-
-
 
 # List a pod identified by type and name specified in "pod.yaml"
 kubectl get -f pod.yaml
 
-
-
 # Get all Objects in default namespace
 kubectl get all
+```
 
 
+---
+---
 
-# Clean-Up [Delete]
+
+## Clean-Up [Delete]
+```
 ## Delete Pod
 kubectl delete pod <Pod-Name>                   # Delete Pod
 kubectl delete pod my-first-pod     
@@ -70,19 +66,19 @@ kubectl delete rs my-helloworld-rs
 [or]
 kubectl delete rs/my-helloworld-rs
 
-## Delete ReplicaSet
-kubectl delete deploy <ReplicaSet-Name>         # Delete Deployment
-kubectl delete deploy my-first-deployment
+## Delete Deployment
+kubectl delete deployment <ReplicaSet-Name>         # Delete Deployment
+kubectl delete deployment my-first-deployment
 [or]
-kubectl delete deploy/my-first-deployment
+kubectl delete deployment/my-first-deployment
 ```
+
 
 ---
 ---
 
 
 ## Inspect AKS with Kubectl Commands
-
 ```
 
 # Inspect the config with Describe Command
@@ -628,13 +624,173 @@ http://<External-IP-from-get-service-output>
 
 ### 4. 5. Rollback Deployment
 
+- We can rollback a deployment in two ways.
+  1. Previous Version
+  2. Specific Version
+
+
+
+#### Step-01: Rollback a Deployment to Previous Version
+
+```
+
+# List Deployment Rollout History
+kubectl rollout history deployment/<Deployment-Name>
+kubectl rollout history deployment/my-first-deployment  
+
+# Verify changes in each revision
+  - Observation: Review the "Annotations" and "Image" tags for clear understanding about changes.
+
+# List Deployment History with revision information
+kubectl rollout history deployment/my-first-deployment --revision=1
+kubectl rollout history deployment/my-first-deployment --revision=2
+kubectl rollout history deployment/my-first-deployment --revision=3
+
+# Rollback to previous version
+  - Observation: If we rollback, it will go back to revision-2 and its number increases to revision-4
+
+# Undo Deployment
+kubectl rollout undo deployment/my-first-deployment
+
+# List Deployment Rollout History
+kubectl rollout history deployment/my-first-deployment  
+
+# Verify Deployment, Pods, ReplicaSets
+kubectl get deploy
+kubectl get rs
+kubectl get po
+kubectl describe deploy my-first-deployment
+
+# Access the Application using Public IP
+
+# Get Load Balancer IP
+kubectl get svc
+
+# Application URL
+http://<External-IP-from-get-service-output>
+
+```
+
+
+
+#### Step-02: Rollback to Specific Version
+
+```
+
+# List Deployment Rollout History
+kubectl rollout history deployment/<Deployment-Name>
+kubectl rollout history deployment/my-first-deployment 
+
+# Rollback Deployment to Specific Revision
+kubectl rollout undo deployment/my-first-deployment --to-revision=3
+
+# List Deployment History
+  - Observation: If we rollback to revision 3, it will go back to revision-3 and its number increases to revision-5 in rollout history
+
+# List Deployment Rollout History
+kubectl rollout history deployment/my-first-deployment  
+
+# Access the Application using Public IP
+  - We should see Application Version:V3 whenever we access the application in browser
+
+# Get Load Balancer IP
+kubectl get svc
+
+# Application URL
+http://<Load-Balancer-IP>
+
+```
+
+
+#### Step-03: Rollback Restarts of Application
+
+```
+
+# Rolling Restarts
+kubectl rollout restart deployment/<Deployment-Name>
+kubectl rollout restart deployment/my-first-deployment
+
+# Get list of Pods
+kubectl get po
+
+```
 
 
 
 ### 4. 6. Pause & Resume Deployments
 
+#### Step-01: Check current State of Deployment & Application
 
+```
+# Check the Rollout History of a Deployment
+kubectl rollout history deployment/my-first-deployment  
+Observation: Make a note of last version number
 
+# Get list of ReplicaSets
+kubectl get rs
+Observation: Make a note of number of replicaSets present.
+
+# Access the Application 
+http://<External-IP-from-get-service-output>
+Observation: Make a note of application version
+```
+
+#### Step-02: Pausing a Deployment and Making Two Changes
+
+```
+# Pause the Deployment
+kubectl rollout pause deployment/<Deployment-Name>
+kubectl rollout pause deployment/my-first-deployment
+
+# Update Deployment - Application Version from V3 to V4
+kubectl set image deployment/my-first-deployment kubenginx=stacksimplify/kubenginx:4.0.0 --record=true
+
+# Check the Rollout History of a Deployment
+kubectl rollout history deployment/my-first-deployment  
+Observation: No new rollout should start, we should see same number of versions as we check earlier with last version number matches which we have noted earlier.
+
+# Get list of ReplicaSets
+kubectl get rs
+Observation: No new replicaSet created. We should have same number of replicaSets as earlier when we took note. 
+
+# Make one more change: set limits to our container
+kubectl set resources deployment/my-first-deployment -c=kubenginx --limits=cpu=20m,memory=30Mi
+```
+
+#### Step-03: Resume Deployment
+
+```
+# Resume the Deployment
+kubectl rollout resume deployment/my-first-deployment
+
+# Check the Rollout History of a Deployment
+kubectl rollout history deployment/my-first-deployment  
+Observation: You should see a new version got created
+
+# Get list of ReplicaSets
+kubectl get rs
+Observation: You should see new ReplicaSet.
+
+# Get Load Balancer IP
+kubectl get svc
+
+# Access the Application 
+http://<External-IP-from-get-service-output>
+Observation: You should see Application V4 version
+```
+
+#### Step-04: Clean-Up
+
+```
+# Delete Deployment
+kubectl delete deployment my-first-deployment
+
+# Delete Service
+kubectl delete svc my-first-deployment-service
+
+# Get all Objects from Kubernetes default namespace
+kubectl get all
+```
 
 
 ### 4. 7. Canary Deployments
