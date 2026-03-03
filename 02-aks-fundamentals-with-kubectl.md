@@ -62,7 +62,8 @@ kubectl delete rs my-helloworld-rs
 kubectl delete rs/my-helloworld-rs
 ```
 
-
+---
+---
 
 ## Inspect AKS with Kubectl Commands
 
@@ -120,7 +121,8 @@ kubectl get service my-first-service -o yaml
 
 ```
 
-
+---
+---
 
 ## 1. PODs
 
@@ -218,7 +220,8 @@ kubectl delete pod my-first-pod
 
 ```
 
-
+---
+---
 
 ## 2. Load Balancer Service
 
@@ -254,7 +257,8 @@ kubectl describe service my-first-service
 http://<External-IP-from-get-service-output>
 ```
 
-
+---
+---
 
 
 ## 3. ReplicaSets
