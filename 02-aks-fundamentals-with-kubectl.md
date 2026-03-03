@@ -265,11 +265,12 @@ http://<External-IP-from-get-service-output>
 
 ## 3. ReplicaSets
 
-### Create ReplicaSet
+### Step-01: Create ReplicaSet
 ```
 kubectl create -f replicaset-demo.yml
 ```
-- **replicaset-demo.yml**
+
+**replicaset-demo.yml**
 ```yaml
 apiVersion: apps/v1
 kind: ReplicaSet
@@ -292,38 +293,36 @@ spec:
         image: stacksimplify/kube-helloworld:1.0.0
 ```
 
-### List ReplicaSets
-- Get list of ReplicaSets
-```
-kubectl get replicaset            # Get list of ReplicaSets
-kubectl get rs            
-```
 
-### Describe ReplicaSet
-- Describe the newly created ReplicaSet
+
+### Step-02: Inspect a ReplicaSets
 ```
+# List ReplicaSets
+kubectl get replicaset            # Get list of ReplicaSets
+kubectl get rs 
+
+# Describe ReplicaSet
 kubectl describe rs/<replicaset-name>       # Describe ReplicaSets
 kubectl describe rs/my-helloworld-rs
 [or]
 kubectl describe rs <replicaset-name>       # Describe ReplicaSets
 kubectl describe rs my-helloworld-rs
-```
 
-### List of Pods
-```
 # Get list of Pods
 kubectl get pods                            # Get Pods list with status
 kubectl get pods -o wide                    # Get Pods list with wide options
 kubectl describe pod <pod-name>             # Describe the Pod
-```
 
-### Verify the Owner of the Pod
+# Verify the Owner of the Pod
 - Verify the owner reference of the pod.
 - Verify under **"name"** tag under **"ownerReferences"**. We will find the replicaset name to which this pod belongs to. 
-```
 kubectl get pods <pod-name> -o yaml
 kubectl get pods my-helloworld-rs-c8rrj -o yaml 
+
+
+
 ```
+
 
 
 ## Step-03: Expose ReplicaSet as a Service
