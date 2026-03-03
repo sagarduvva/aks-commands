@@ -408,9 +408,49 @@ kubectl get svc
 
 
 ## 4. Deployments
+1. Create Deployment
+2. Scale the Deployment
+3. Expose Deployment as a Service
+4. Update Deployment
+5. Rollback Deployment
+6. Rolling Restarts
+7. Pause & Resume Deployments
+8. Canary Deployments (Will be covered at Declarative section of Deployments)
 
-### 4. 1. 
+
+### 4. 1. Create Deployment
 
 
+
+
+### 4. 2. Scaling the Deployment
+
+
+
+
+### 4. 3. Expose Deployment as a Service
+
+
+
+
+
+### 4. 4. Update Deployment
+
+
+
+
+### 4. 5. Rollback Deployment
+
+
+
+
+### 4. 6. Pause & Resume Deployments
+
+
+
+
+
+### 4. 7. Canary Deployments
+- Will be covered at Declarative section of Deployments
 
 
